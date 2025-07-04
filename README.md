@@ -1,3 +1,45 @@
+# Gemini CLI in Docker
+
+Builds everything within Docker, so you can run the Gemini CLI without installing Node.js or any dependencies on your local machine.
+
+## Get Google Gemini API key
+
+Search `Use a Gemini API key` to see how to get it. Ensure you define the environment variable `GEMINI_API_KEY` is in your `$HOME/.bashrc` etc.
+
+## Build the Docker image
+
+```shell
+docker build -t gemini-cli .
+```
+
+## Create the settings directory
+
+```shell
+echo '{
+  "selectedAuthType": "gemini-api-key",
+  "theme": "ANSI"
+}' > .gemini/settings.json
+```
+
+## Run the Docker container
+
+```shell
+docker run -it -e GEMINI_API_KEY=$GEMINI_API_KEY -v ./.gemini:/home/node/.gemini gemini-cli
+```
+
+## Run the Docker container with a directory mount
+
+```shell
+cd [Somewhere to mount]
+docker run -it -e GEMINI_API_KEY=$GEMINI_API_KEY -v ./.gemini:/home/node/.gemini -v .:/mounted gemini-cli
+```
+
+## Inspect the container
+
+```shell
+docker exec -it $(docker ps --filter "ancestor=gemini-cli" --format "{{.ID}}") bash
+```
+
 # Gemini CLI
 
 [![Gemini CLI CI](https://github.com/google-gemini/gemini-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/google-gemini/gemini-cli/actions/workflows/ci.yml)
